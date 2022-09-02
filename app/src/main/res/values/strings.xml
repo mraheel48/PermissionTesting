@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">PermissionTesting</string>
+    <string name="dexter_permission">Dexter Permission Read</string>
+
+    <string name="dexter_permission_camera">Dexter Permission Camera and Read</string>
+    <string name="allow_network">Allow Network</string>
+</resources>
