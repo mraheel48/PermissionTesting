@@ -4,4 +4,5 @@
 
     <string name="dexter_permission_camera">Dexter Permission Camera and Read</string>
     <string name="allow_network">Allow Network</string>
+    <string name="simple_permission">Simple Permission</string>
 </resources>

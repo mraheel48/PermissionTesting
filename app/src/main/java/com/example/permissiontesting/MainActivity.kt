@@ -1,19 +1,23 @@
 package com.example.permissiontesting
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.example.permissiontesting.databinding.ActivityMainBinding
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import pub.devrel.easypermissions.EasyPermissions
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    private var PERMISSION_ALL = 1
+    private var permissionsHelper: PermissionsHelper = PermissionsHelper()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,6 +92,21 @@ class MainActivity : AppCompatActivity() {
                 }).check()
         }
 
+        binding.simplePermission.setOnClickListener {
+            if (!hasPermissions(*Utils.cameraPermissionPass)) {
+                ActivityCompat.requestPermissions(this, Utils.cameraPermissionPass, PERMISSION_ALL)
+            } else {
+                Utils.showToast(this, "All Permission is allow")
+            }
+        }
+
+    }
+
+    private fun checkPermissions() {
+        permissionsHelper.checkAndRequestPermissions(
+            this,
+            *Utils.cameraPermissionPass
+        )
     }
 
     override fun onRequestPermissionsResult(
@@ -96,8 +115,19 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        // Forward results to EasyPermissions
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+        permissionsHelper.onRequestPermissionsResult(
+            this@MainActivity,
+            requestCode,
+            permissions,
+            grantResults
+        )
+    }
+
+    private fun hasPermissions(vararg permissions: String): Boolean = permissions.all {
+        ActivityCompat.checkSelfPermission(
+            this@MainActivity,
+            it
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
 }
